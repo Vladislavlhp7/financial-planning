@@ -1,0 +1,24 @@
+{
+  "name": "workspace",
+  "version": "0.0.0",
+  "license": "MIT",
+  "workspaces": [
+    "artifacts/financial-sandbox",
+    "artifacts/mockup-sandbox",
+    "lib/api-client-react",
+    "lib/api-spec",
+    "lib/api-zod",
+    "scripts"
+  ],
+  "scripts": {
+    "build": "npm run typecheck && npm run build --workspaces --if-present",
+    "typecheck:libs": "tsc --build",
+    "typecheck": "npm run typecheck:libs && npm run typecheck --workspaces --if-present",
+    "dev:frontend": "cd artifacts/financial-sandbox && npx vite --config vite.config.ts --host 0.0.0.0"
+  },
+  "private": true,
+  "devDependencies": {
+    "typescript": "~5.9.2",
+    "prettier": "^3.8.1"
+  }
+}

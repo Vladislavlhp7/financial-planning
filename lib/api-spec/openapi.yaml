@@ -1,0 +1,256 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: Financial Sandbox API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: financial
+    description: Financial data operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /budget:
+    get:
+      operationId: getBudget
+      tags: [financial]
+      summary: Get the user's full financial data
+      responses:
+        "200":
+          description: Full financial profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinancialProfile"
+    put:
+      operationId: updateBudget
+      tags: [financial]
+      summary: Update the user's full financial data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FinancialProfile"
+      responses:
+        "200":
+          description: Updated financial profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinancialProfile"
+
+  /budget/reset:
+    post:
+      operationId: resetBudget
+      tags: [financial]
+      summary: Reset to default financial data
+      responses:
+        "200":
+          description: Reset financial profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinancialProfile"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    FinancialItem:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        amount:
+          type: number
+        frequency:
+          type: string
+          enum: [monthly, yearly]
+      required:
+        - id
+        - name
+        - amount
+        - frequency
+
+    AssetItem:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        amount:
+          type: number
+        returnRate:
+          type: number
+      required:
+        - id
+        - name
+        - amount
+        - returnRate
+
+    InvestmentItem:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        amount:
+          type: number
+        frequency:
+          type: string
+          enum: [monthly, yearly]
+        returnRate:
+          type: number
+      required:
+        - id
+        - name
+        - amount
+        - frequency
+        - returnRate
+
+    InvestmentBucket:
+      type: object
+      description: A named allocation pocket within the total rolling investment pool
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        currentAllocationPct:
+          type: number
+          description: Current percentage allocation of the total investment pool (0-100)
+        targetAllocationPct:
+          type: number
+          description: Target (what-if) percentage allocation (0-100)
+        returnRate:
+          type: number
+          description: Expected annual return rate as a decimal (e.g. 0.08 for 8%)
+      required:
+        - id
+        - name
+        - currentAllocationPct
+        - targetAllocationPct
+        - returnRate
+
+    ActiveTradingConfig:
+      type: object
+      description: Special active trading pocket with its own contribution and return rates
+      properties:
+        enabled:
+          type: boolean
+        amount:
+          type: number
+          description: Contribution amount
+        frequency:
+          type: string
+          enum: [monthly, yearly]
+        currentReturnRate:
+          type: number
+          description: Current expected annual return (can be negative), as a decimal
+        targetReturnRate:
+          type: number
+          description: Target (what-if) annual return, as a decimal
+        riskLevel:
+          type: integer
+          minimum: 1
+          maximum: 10
+          description: Subjective risk level from 1 (low) to 10 (extreme)
+      required:
+        - enabled
+        - amount
+        - frequency
+        - currentReturnRate
+        - targetReturnRate
+        - riskLevel
+
+    ScenarioSettings:
+      type: object
+      properties:
+        expenseModifier:
+          type: number
+        incomeModifier:
+          type: number
+        investmentReturnOverride:
+          type: number
+          description: Override annual return for all investments (-1 = use individual rates)
+        inflationRate:
+          type: number
+        compoundingFrequency:
+          type: string
+          enum: [annual, monthly, quarterly]
+        timeframeYears:
+          type: integer
+        useTargetAllocations:
+          type: boolean
+          description: When true, use targetAllocationPct instead of currentAllocationPct for buckets
+      required:
+        - expenseModifier
+        - incomeModifier
+        - investmentReturnOverride
+        - inflationRate
+        - compoundingFrequency
+        - timeframeYears
+        - useTargetAllocations
+
+    FinancialProfile:
+      type: object
+      properties:
+        income:
+          type: array
+          items:
+            $ref: "#/components/schemas/FinancialItem"
+        expenses:
+          type: array
+          items:
+            $ref: "#/components/schemas/FinancialItem"
+        assets:
+          type: array
+          items:
+            $ref: "#/components/schemas/AssetItem"
+        investments:
+          type: array
+          items:
+            $ref: "#/components/schemas/InvestmentItem"
+        investmentBuckets:
+          type: array
+          items:
+            $ref: "#/components/schemas/InvestmentBucket"
+          description: Percentage-split allocation buckets within the investment pool
+        activeTrading:
+          $ref: "#/components/schemas/ActiveTradingConfig"
+        scenarioSettings:
+          $ref: "#/components/schemas/ScenarioSettings"
+      required:
+        - income
+        - expenses
+        - assets
+        - investments
+        - investmentBuckets
+        - activeTrading
+        - scenarioSettings

@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Financial Sandbox & What-If Analyzer"
+version = "1.0.0"
+id = "artifacts/financial-sandbox"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+localPort = 22577
+name = "web"
+paths = ["/"]
+
+[services.development]
+run = "npm exec -w @workspace/financial-sandbox run dev"
+
+[services.env]
+PORT = "22577"
+BASE_PATH = "/"
+
+[services.production]
+build = ["npm", "exec", "-w", "@workspace/financial-sandbox", "run", "build"]
+publicDir = "artifacts/financial-sandbox/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
