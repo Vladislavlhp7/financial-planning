@@ -1,0 +1,20 @@
+packages:
+  "recharts": "Data visualization for financial charts"
+  "framer-motion": "Animations and layout transitions"
+  "clsx": "Utility for conditionally joining classNames"
+  "tailwind-merge": "Utility for merging tailwind classes"
+  "uuid": "Generating unique IDs for new items"
+  "@types/uuid": "Types for uuid"
+  "lodash-es": "Debounce for auto-saving"
+  "@types/lodash-es": "Types for lodash-es"
+
+images:
+  - path: "artifacts/financial-sandbox/public/images/bg-glow.png"
+    description: "Subtle abstract dark gradient mesh background with deep indigo, emerald, and teal dark hues"
+    aspect_ratio: "16:9"
+
+notes:
+  - App relies on generated react-query hooks from @workspace/api-client-react.
+  - Calculations are executed entirely on the frontend using React state for a snappy sandbox experience.
+  - Automatically debounces saves to PUT /api/budget.
+  - Default offline/fallback mode included if API isn't fully operational yet.
