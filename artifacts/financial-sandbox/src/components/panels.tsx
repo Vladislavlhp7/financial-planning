@@ -16,6 +16,15 @@ interface PanelProps {
   updateProfile: (updater: (prev: FinancialProfile) => FinancialProfile) => void;
 }
 
+type ContributionFrequency = "monthly" | "yearly";
+type CompoundingFrequency = "annual" | "quarterly" | "monthly";
+
+const normalizeContributionFrequency = (value: unknown): ContributionFrequency =>
+  value === "yearly" ? "yearly" : "monthly";
+
+const normalizeCompoundingFrequency = (value: unknown): CompoundingFrequency =>
+  value === "annual" || value === "quarterly" || value === "monthly" ? value : "annual";
+
 // ── Shared item list (income, expenses, assets, plain investments) ───────────
 
 function ItemList({
@@ -255,7 +264,15 @@ function BucketEditor({
 // ── Active Trading Panel ─────────────────────────────────────────────────────
 
 export function ActiveTradingPanel({ profile, updateProfile }: PanelProps) {
-  const at = profile.activeTrading;
+  const at = {
+    enabled: false,
+    amount: 0,
+    currentReturnRate: 0,
+    targetReturnRate: 0,
+    riskLevel: 5,
+    ...(profile.activeTrading ?? {}),
+    frequency: normalizeContributionFrequency(profile.activeTrading?.frequency),
+  };
 
   const update = (patch: Partial<typeof at>) => {
     updateProfile((prev) => ({ ...prev, activeTrading: { ...prev.activeTrading, ...patch } }));
@@ -309,9 +326,9 @@ export function ActiveTradingPanel({ profile, updateProfile }: PanelProps) {
           <div>
             <label className="block text-xs font-medium text-muted-foreground mb-1">Frequency</label>
             <ToggleGroup
-              options={[{ label: "Monthly", value: "monthly" }, { label: "Yearly", value: "yearly" }]}
+              options={[{ label: "Monthly", value: "monthly" }, { label: "Annually", value: "yearly" }]}
               value={at.frequency}
-              onChange={(v) => update({ frequency: v as any })}
+              onChange={(v) => update({ frequency: normalizeContributionFrequency(v) })}
             />
           </div>
 
@@ -726,7 +743,7 @@ export function AdvancedSettingsPanel({ profile, updateProfile }: PanelProps) {
             { label: "Monthly", value: "monthly" },
           ]}
           value={s.compoundingFrequency}
-          onChange={(v) => updateSettings({ compoundingFrequency: v as any })}
+          onChange={(v) => updateSettings({ compoundingFrequency: normalizeCompoundingFrequency(v) })}
         />
       </div>
 

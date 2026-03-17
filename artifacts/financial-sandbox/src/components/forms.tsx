@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import type { FinancialItem, AssetItem, InvestmentItem } from "@workspace/api-client-react";
 import { Dialog, Input, Button, ToggleGroup } from "./ui/core";
 
-type ItemType = 'income' | 'expense' | 'asset' | 'investment';
+type ItemType = "income" | "expenses" | "assets" | "investments";
 
 interface ItemFormDialogProps {
   isOpen: boolean;
@@ -12,6 +12,17 @@ interface ItemFormDialogProps {
   initialData?: any;
   onSave: (item: any) => void;
 }
+
+type ContributionFrequency = "monthly" | "yearly";
+
+const normalizeContributionFrequency = (value: unknown): ContributionFrequency =>
+  value === "yearly" ? "yearly" : "monthly";
+
+const hasFrequency = (type: ItemType): boolean =>
+  type === "income" || type === "expenses" || type === "investments";
+
+const hasReturnRate = (type: ItemType): boolean =>
+  type === "assets" || type === "investments";
 
 export function ItemFormDialog({ isOpen, onClose, type, initialData, onSave }: ItemFormDialogProps) {
   const [name, setName] = React.useState("");
@@ -23,7 +34,7 @@ export function ItemFormDialog({ isOpen, onClose, type, initialData, onSave }: I
     if (isOpen) {
       setName(initialData?.name || "");
       setAmount(initialData?.amount?.toString() || "");
-      setFrequency(initialData?.frequency || "monthly");
+      setFrequency(normalizeContributionFrequency(initialData?.frequency));
       setReturnRate(initialData?.returnRate ? (initialData.returnRate * 100).toString() : "");
     }
   }, [isOpen, initialData]);
@@ -40,12 +51,14 @@ export function ItemFormDialog({ isOpen, onClose, type, initialData, onSave }: I
 
     let finalItem: any = { ...baseItem };
 
-    if (type === 'income' || type === 'expense') {
-      finalItem = { ...baseItem, frequency } as FinancialItem;
-    } else if (type === 'asset') {
+    const safeFrequency = normalizeContributionFrequency(frequency);
+
+    if (type === "income" || type === "expenses") {
+      finalItem = { ...baseItem, frequency: safeFrequency } as FinancialItem;
+    } else if (type === "assets") {
       finalItem = { ...baseItem, returnRate: parseFloat(returnRate) / 100 } as AssetItem;
-    } else if (type === 'investment') {
-      finalItem = { ...baseItem, frequency, returnRate: parseFloat(returnRate) / 100 } as InvestmentItem;
+    } else if (type === "investments") {
+      finalItem = { ...baseItem, frequency: safeFrequency, returnRate: parseFloat(returnRate) / 100 } as InvestmentItem;
     }
 
     onSave(finalItem);
@@ -54,9 +67,9 @@ export function ItemFormDialog({ isOpen, onClose, type, initialData, onSave }: I
 
   const titleMap = {
     income: "Income Source",
-    expense: "Expense",
-    asset: "Existing Asset",
-    investment: "Rolling Investment"
+    expenses: "Expense",
+    assets: "Existing Asset",
+    investments: "Rolling Investment",
   };
 
   return (
@@ -85,18 +98,18 @@ export function ItemFormDialog({ isOpen, onClose, type, initialData, onSave }: I
           />
         </div>
 
-        {(type === 'income' || type === 'expense' || type === 'investment') && (
+        {hasFrequency(type) && (
           <div>
             <label className="block text-sm font-medium text-muted-foreground mb-1">Frequency</label>
             <ToggleGroup 
-              options={[{label: 'Monthly', value: 'monthly'}, {label: 'Yearly', value: 'yearly'}]}
+              options={[{label: 'Monthly', value: 'monthly'}, {label: 'Annually', value: 'yearly'}]}
               value={frequency}
-              onChange={(val) => setFrequency(val as any)}
+              onChange={(val) => setFrequency(normalizeContributionFrequency(val))}
             />
           </div>
         )}
 
-        {(type === 'asset' || type === 'investment') && (
+        {hasReturnRate(type) && (
           <div>
             <label className="block text-sm font-medium text-muted-foreground mb-1">Expected Annual Return (%)</label>
             <Input 
