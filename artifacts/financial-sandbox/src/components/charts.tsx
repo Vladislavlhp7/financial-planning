@@ -553,6 +553,61 @@ export function InvestmentRatioChart({
   );
 }
 
+export function ExpenseDistributionChart({
+  expenses,
+  viewMode,
+}: {
+  expenses: { id: string; name: string; amount: number; frequency: "monthly" | "yearly" }[];
+  viewMode: "monthly" | "yearly";
+}) {
+  const data = expenses
+    .map((expense) => ({
+      name: expense.name,
+      value: expense.frequency === viewMode ? expense.amount : expense.frequency === "monthly" ? expense.amount * 12 : expense.amount / 12,
+    }))
+    .filter((expense) => expense.value > 0);
+
+  if (!data.length) return null;
+
+  return (
+    <div className="w-full h-[240px]">
+      <ResponsiveContainer width="100%" height="100%">
+        <RechartsPieChart>
+          <Pie
+            data={data}
+            cx="50%"
+            cy="50%"
+            innerRadius={58}
+            outerRadius={88}
+            paddingAngle={3}
+            dataKey="value"
+            stroke="none"
+          >
+            {data.map((entry, index) => {
+              const hue = (index * 57 + 348) % 360;
+              return <Cell key={entry.name} fill={`hsl(${hue} 76% 58%)`} />;
+            })}
+          </Pie>
+          <Tooltip
+            formatter={(val: number) => [formatCurrency(val), ""]}
+            contentStyle={{
+              backgroundColor: "hsl(0 0% 7%)",
+              borderColor: "hsl(0 0% 15%)",
+              borderRadius: "12px",
+            }}
+          />
+          <Legend
+            verticalAlign="bottom"
+            height={40}
+            iconType="circle"
+            wrapperStyle={{ fontSize: "11px" }}
+          />
+        </RechartsPieChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
 // Bucket allocation mini-chart
 export function BucketAllocationBar({
   buckets,

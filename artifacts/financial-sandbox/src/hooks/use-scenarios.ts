@@ -16,6 +16,12 @@ export interface ScenarioFull extends ScenarioMeta {
   data: FinancialProfile;
 }
 
+export interface SaveScenarioResult {
+  id: string | null;
+  overwritten: boolean;
+  conflictId?: string;
+}
+
 export function useScenarios() {
   const [scenarios, setScenarios] = useState<ScenarioMeta[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,19 +44,32 @@ export function useScenarios() {
     name: string,
     description: string,
     profile: FinancialProfile,
-    existingId?: string
-  ): Promise<string | null> => {
+    options?: { existingId?: string; overwriteExisting?: boolean }
+  ): Promise<SaveScenarioResult> => {
     try {
-      const body = { name, description, data: profile };
-      if (existingId) {
-        await axios.put(`${BASE}/scenarios/${existingId}`, body);
-        return existingId;
+      const body = {
+        name,
+        description,
+        data: profile,
+        overwriteExisting: options?.overwriteExisting ?? false,
+      };
+      if (options?.existingId) {
+        await axios.put(`${BASE}/scenarios/${options.existingId}`, body);
+        return { id: options.existingId, overwritten: true };
       } else {
-        const res = await axios.post<{ id: string }>(`${BASE}/scenarios`, body);
-        return res.data.id;
+        const res = await axios.post<{ id: string; overwritten?: boolean }>(`${BASE}/scenarios`, body);
+        return { id: res.data.id, overwritten: res.data.overwritten ?? false };
       }
-    } catch {
-      return null;
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e) && e.response?.status === 409) {
+        const detail = e.response.data?.detail;
+        return {
+          id: null,
+          overwritten: false,
+          conflictId: detail?.existingId,
+        };
+      }
+      return { id: null, overwritten: false };
     }
   }, []);
 

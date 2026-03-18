@@ -9,8 +9,8 @@ import { Card, ToggleGroup } from "@/components/ui/core";
 import { DataInputsPanel, ScenarioPanel, AdvancedSettingsPanel } from "@/components/panels";
 import {
   ProjectionAreaChart, BreakdownDonutChart, BucketAllocationBar,
-  IncomeAllocationChart, BucketGrowthChart, InvestmentRatioChart,
-  MonteCarloChart,
+  IncomeAllocationChart, BucketGrowthChart,
+  MonteCarloChart, ExpenseDistributionChart,
 } from "@/components/charts";
 import { useMonteCarlo } from "@/hooks/use-montecarlo";
 import { ScenarioManager } from "@/components/scenario-manager";
@@ -22,6 +22,10 @@ export function Dashboard() {
   const { profile, updateProfile, isLoading, isSaving } = useBudgetState();
   const [viewMode, setViewMode] = React.useState<"monthly" | "yearly">("monthly");
   const [activeTab, setActiveTab] = React.useState<"data" | "scenarios" | "advanced">("data");
+  const [activeConfigName, setActiveConfigName] = React.useState("Working Profile");
+  const [hasUnsavedConfigChanges, setHasUnsavedConfigChanges] = React.useState(false);
+  const activeConfigBaselineRef = React.useRef<string | null>(null);
+  const serializeProfile = React.useCallback((nextProfile: FinancialProfile) => JSON.stringify(nextProfile), []);
   const [showMonteCarlo, setShowMonteCarlo] = React.useState(false);
   const [showCompare, setShowCompare] = React.useState(false);
   const { bands: monteCarloBands, isLoading: monteCarloLoading } = useMonteCarlo(
@@ -36,6 +40,25 @@ export function Dashboard() {
     },
     [updateProfile]
   );
+
+  const handleActiveScenarioChange = React.useCallback(
+    (scenario: { name: string; profile: FinancialProfile }) => {
+      setActiveConfigName(scenario.name);
+      activeConfigBaselineRef.current = serializeProfile(scenario.profile);
+      setHasUnsavedConfigChanges(false);
+    },
+    [serializeProfile]
+  );
+
+  React.useEffect(() => {
+    const serializedProfile = serializeProfile(profile);
+    if (activeConfigBaselineRef.current === null) {
+      activeConfigBaselineRef.current = serializedProfile;
+      setHasUnsavedConfigChanges(false);
+      return;
+    }
+    setHasUnsavedConfigChanges(serializedProfile !== activeConfigBaselineRef.current);
+  }, [profile, serializeProfile]);
 
   if (isLoading) {
     return (
@@ -86,7 +109,18 @@ export function Dashboard() {
               value={viewMode}
               onChange={(v) => setViewMode(v as any)}
             />
-            <ScenarioManager profile={profile} onLoad={handleLoadScenario} />
+            <div className="hidden lg:flex items-center gap-1.5 text-xs font-medium bg-secondary/50 text-muted-foreground px-3 py-1.5 rounded-full max-w-[280px]">
+              <span className="text-foreground/80">Current:</span>
+              <span className="truncate text-foreground">{activeConfigName}</span>
+              {hasUnsavedConfigChanges && (
+                <span className="shrink-0 text-amber-400">• Unsaved changes</span>
+              )}
+            </div>
+            <ScenarioManager
+              profile={profile}
+              onLoad={handleLoadScenario}
+              onActiveScenarioChange={handleActiveScenarioChange}
+            />
             <button
               onClick={() => setShowCompare(true)}
               className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground bg-secondary/50 hover:bg-secondary px-3 py-1.5 rounded-full transition-colors"
@@ -387,11 +421,17 @@ export function Dashboard() {
             </Card>
 
             <Card className="p-6">
-              <h3 className="text-base font-display font-semibold mb-1">Salary Distribution</h3>
+              <h3 className="text-base font-display font-semibold mb-1">Expense Distribution</h3>
               <p className="text-sm text-muted-foreground mb-5">
-                {viewMode === "monthly" ? "Monthly" : "Annual"} income split across categories
+                {viewMode === "monthly" ? "Monthly" : "Annual"} spend split across expense categories
               </p>
-              <InvestmentRatioChart summary={summary} viewMode={viewMode} />
+              {profile.expenses.length > 0 ? (
+                <ExpenseDistributionChart expenses={profile.expenses} viewMode={viewMode} />
+              ) : (
+                <p className="text-sm text-muted-foreground py-8 text-center">
+                  Add expenses to see distribution
+                </p>
+              )}
             </Card>
           </div>
 

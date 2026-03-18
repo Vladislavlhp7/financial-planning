@@ -17,6 +17,7 @@ class ScenarioCreate(BaseModel):
     name: str = Field(..., max_length=100)
     description: str = Field(default="", max_length=500)
     data: FinancialProfile
+    overwriteExisting: bool = False
 
 
 class ScenarioFull(ScenarioMeta):
@@ -27,3 +28,4 @@ class ScenarioResponse(BaseModel):
     id: str
     name: str
     description: str
+    overwritten: bool = False

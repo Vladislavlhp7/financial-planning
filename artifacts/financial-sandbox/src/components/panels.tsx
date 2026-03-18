@@ -554,6 +554,16 @@ export function ScenarioPanel({ profile, updateProfile }: PanelProps) {
     }));
   };
 
+  const toggleTargetAllocations = () => {
+    updateProfile((prev) => ({
+      ...prev,
+      scenarioSettings: {
+        ...prev.scenarioSettings,
+        useTargetAllocations: !prev.scenarioSettings.useTargetAllocations,
+      },
+    }));
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -609,7 +619,7 @@ export function ScenarioPanel({ profile, updateProfile }: PanelProps) {
           </p>
         </div>
         <button
-          onClick={() => updateSettings({ useTargetAllocations: !s.useTargetAllocations })}
+          onClick={toggleTargetAllocations}
           className={`w-12 h-6 rounded-full transition-colors relative ${s.useTargetAllocations ? "bg-primary" : "bg-secondary"}`}
         >
           <span

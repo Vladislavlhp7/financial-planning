@@ -9,6 +9,7 @@ import { useScenarios, type ScenarioMeta } from "@/hooks/use-scenarios";
 interface ScenarioManagerProps {
   profile: FinancialProfile;
   onLoad: (profile: FinancialProfile) => void;
+  onActiveScenarioChange?: (scenario: { id: string; name: string; profile: FinancialProfile }) => void;
 }
 
 function formatRelativeTime(dateStr: string): string {
@@ -23,7 +24,7 @@ function formatRelativeTime(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }
 
-export function ScenarioManager({ profile, onLoad }: ScenarioManagerProps) {
+export function ScenarioManager({ profile, onLoad, onActiveScenarioChange }: ScenarioManagerProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isSaveDialogOpen, setIsSaveDialogOpen] = React.useState(false);
   const [saveName, setSaveName] = React.useState("");
@@ -54,17 +55,44 @@ export function ScenarioManager({ profile, onLoad }: ScenarioManagerProps) {
   };
 
   const handleSave = async () => {
-    if (!saveName.trim()) return;
+    const trimmedName = saveName.trim();
+    if (!trimmedName) return;
+
     setIsSaving(true);
-    const id = await saveScenario(saveName.trim(), saveDesc.trim(), profile);
+    let cancelled = false;
+    let result = await saveScenario(trimmedName, saveDesc.trim(), profile);
+
+    if (!result.id && result.conflictId) {
+      const confirmed = window.confirm(
+        `A config named "${trimmedName}" already exists. Overwrite it?`
+      );
+      if (confirmed) {
+        result = await saveScenario(trimmedName, saveDesc.trim(), profile, {
+          overwriteExisting: true,
+        });
+      } else {
+        cancelled = true;
+      }
+    }
+
     setIsSaving(false);
-    if (id) {
-      showFeedback("Config saved!");
+
+    if (result.id) {
+      showFeedback(result.overwritten ? "Config overwritten!" : "Config saved!");
+      onActiveScenarioChange?.({ id: result.id, name: trimmedName, profile });
       setSaveName("");
       setSaveDesc("");
       setIsSaveDialogOpen(false);
       fetchScenarios();
+      return;
     }
+
+    if (cancelled) {
+      showFeedback("Overwrite cancelled");
+      return;
+    }
+
+    showFeedback("Unable to save config");
   };
 
   const handleLoad = React.useCallback(async (scenario: ScenarioMeta) => {
@@ -73,10 +101,11 @@ export function ScenarioManager({ profile, onLoad }: ScenarioManagerProps) {
     setLoadingId(null);
     if (data) {
       onLoad(data);
+      onActiveScenarioChange?.({ id: scenario.id, name: scenario.name, profile: data });
       setIsOpen(false);
       showFeedback(`Loaded "${scenario.name}"`);
     }
-  }, [loadScenario, onLoad]);
+  }, [loadScenario, onLoad, onActiveScenarioChange]);
 
   const handleDelete = async (id: string) => {
     setDeletingId(id);
