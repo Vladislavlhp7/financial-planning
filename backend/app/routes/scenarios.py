@@ -1,7 +1,7 @@
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import delete, select, update
+from sqlalchemy import delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import FinancialScenario
@@ -56,15 +56,50 @@ async def get_scenario(scenario_id: str, db: AsyncSession = Depends(get_db)) -> 
 
 @router.post("", response_model=ScenarioResponse, status_code=201)
 async def create_scenario(body: ScenarioCreate, db: AsyncSession = Depends(get_db)) -> ScenarioResponse:
+    normalized_name = body.name[:100].strip()
+    normalized_description = body.description[:500] if body.description else ""
+
+    existing_result = await db.execute(
+        select(FinancialScenario).where(func.lower(FinancialScenario.name) == normalized_name.lower()).limit(1)
+    )
+    existing = existing_result.scalar_one_or_none()
+
+    if existing and not body.overwriteExisting:
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "message": "Scenario with this name already exists",
+                "existingId": existing.id,
+            },
+        )
+
+    if existing and body.overwriteExisting:
+        stmt = (
+            update(FinancialScenario)
+            .where(FinancialScenario.id == existing.id)
+            .values(
+                name=normalized_name,
+                description=normalized_description,
+                data=body.data.model_dump(),
+            )
+        )
+        await db.execute(stmt)
+        return ScenarioResponse(
+            id=existing.id,
+            name=normalized_name,
+            description=normalized_description,
+            overwritten=True,
+        )
+
     scenario_id = str(uuid.uuid4())
     stmt = FinancialScenario.__table__.insert().values(
         id=scenario_id,
-        name=body.name[:100].strip(),
-        description=body.description[:500] if body.description else "",
+        name=normalized_name,
+        description=normalized_description,
         data=body.data.model_dump(),
     )
     await db.execute(stmt)
-    return ScenarioResponse(id=scenario_id, name=body.name, description=body.description)
+    return ScenarioResponse(id=scenario_id, name=normalized_name, description=normalized_description, overwritten=False)
 
 
 @router.put("/{scenario_id}", response_model=ScenarioResponse)
@@ -88,7 +123,7 @@ async def update_scenario(
         )
     )
     await db.execute(stmt)
-    return ScenarioResponse(id=scenario_id, name=body.name, description=body.description)
+    return ScenarioResponse(id=scenario_id, name=body.name, description=body.description, overwritten=False)
 
 
 @router.delete("/{scenario_id}")
