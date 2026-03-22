@@ -137,6 +137,22 @@ export declare const GetBudgetResponse: zod.ZodObject<{
         compoundingFrequency: zod.ZodEnum<["annual", "monthly", "quarterly"]>;
         timeframeYears: zod.ZodNumber;
         useTargetAllocations: zod.ZodBoolean;
+        goals: zod.ZodArray<zod.ZodObject<{
+            id: zod.ZodString;
+            name: zod.ZodString;
+            targetAmount: zod.ZodNumber;
+            targetYear: zod.ZodNumber;
+        }, "strip", zod.ZodTypeAny, {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }, {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }>, "many">;
     }, "strip", zod.ZodTypeAny, {
         expenseModifier: number;
         incomeModifier: number;
@@ -145,6 +161,12 @@ export declare const GetBudgetResponse: zod.ZodObject<{
         compoundingFrequency: "monthly" | "annual" | "quarterly";
         timeframeYears: number;
         useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
     }, {
         expenseModifier: number;
         incomeModifier: number;
@@ -153,6 +175,12 @@ export declare const GetBudgetResponse: zod.ZodObject<{
         compoundingFrequency: "monthly" | "annual" | "quarterly";
         timeframeYears: number;
         useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
     }>;
 }, "strip", zod.ZodTypeAny, {
     income: {
@@ -203,6 +231,12 @@ export declare const GetBudgetResponse: zod.ZodObject<{
         compoundingFrequency: "monthly" | "annual" | "quarterly";
         timeframeYears: number;
         useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
     };
 }, {
     income: {
@@ -253,6 +287,12 @@ export declare const GetBudgetResponse: zod.ZodObject<{
         compoundingFrequency: "monthly" | "annual" | "quarterly";
         timeframeYears: number;
         useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
     };
 }>;
 /**
@@ -376,6 +416,22 @@ export declare const UpdateBudgetBody: zod.ZodObject<{
         compoundingFrequency: zod.ZodEnum<["annual", "monthly", "quarterly"]>;
         timeframeYears: zod.ZodNumber;
         useTargetAllocations: zod.ZodBoolean;
+        goals: zod.ZodArray<zod.ZodObject<{
+            id: zod.ZodString;
+            name: zod.ZodString;
+            targetAmount: zod.ZodNumber;
+            targetYear: zod.ZodNumber;
+        }, "strip", zod.ZodTypeAny, {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }, {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }>, "many">;
     }, "strip", zod.ZodTypeAny, {
         expenseModifier: number;
         incomeModifier: number;
@@ -384,6 +440,12 @@ export declare const UpdateBudgetBody: zod.ZodObject<{
         compoundingFrequency: "monthly" | "annual" | "quarterly";
         timeframeYears: number;
         useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
     }, {
         expenseModifier: number;
         incomeModifier: number;
@@ -392,6 +454,12 @@ export declare const UpdateBudgetBody: zod.ZodObject<{
         compoundingFrequency: "monthly" | "annual" | "quarterly";
         timeframeYears: number;
         useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
     }>;
 }, "strip", zod.ZodTypeAny, {
     income: {
@@ -442,6 +510,12 @@ export declare const UpdateBudgetBody: zod.ZodObject<{
         compoundingFrequency: "monthly" | "annual" | "quarterly";
         timeframeYears: number;
         useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
     };
 }, {
     income: {
@@ -492,6 +566,12 @@ export declare const UpdateBudgetBody: zod.ZodObject<{
         compoundingFrequency: "monthly" | "annual" | "quarterly";
         timeframeYears: number;
         useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
     };
 }>;
 export declare const updateBudgetResponseActiveTradingRiskLevelMax = 10;
@@ -612,6 +692,22 @@ export declare const UpdateBudgetResponse: zod.ZodObject<{
         compoundingFrequency: zod.ZodEnum<["annual", "monthly", "quarterly"]>;
         timeframeYears: zod.ZodNumber;
         useTargetAllocations: zod.ZodBoolean;
+        goals: zod.ZodArray<zod.ZodObject<{
+            id: zod.ZodString;
+            name: zod.ZodString;
+            targetAmount: zod.ZodNumber;
+            targetYear: zod.ZodNumber;
+        }, "strip", zod.ZodTypeAny, {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }, {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }>, "many">;
     }, "strip", zod.ZodTypeAny, {
         expenseModifier: number;
         incomeModifier: number;
@@ -620,6 +716,12 @@ export declare const UpdateBudgetResponse: zod.ZodObject<{
         compoundingFrequency: "monthly" | "annual" | "quarterly";
         timeframeYears: number;
         useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
     }, {
         expenseModifier: number;
         incomeModifier: number;
@@ -628,6 +730,12 @@ export declare const UpdateBudgetResponse: zod.ZodObject<{
         compoundingFrequency: "monthly" | "annual" | "quarterly";
         timeframeYears: number;
         useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
     }>;
 }, "strip", zod.ZodTypeAny, {
     income: {
@@ -678,6 +786,12 @@ export declare const UpdateBudgetResponse: zod.ZodObject<{
         compoundingFrequency: "monthly" | "annual" | "quarterly";
         timeframeYears: number;
         useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
     };
 }, {
     income: {
@@ -728,6 +842,12 @@ export declare const UpdateBudgetResponse: zod.ZodObject<{
         compoundingFrequency: "monthly" | "annual" | "quarterly";
         timeframeYears: number;
         useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
     };
 }>;
 /**
@@ -851,6 +971,22 @@ export declare const ResetBudgetResponse: zod.ZodObject<{
         compoundingFrequency: zod.ZodEnum<["annual", "monthly", "quarterly"]>;
         timeframeYears: zod.ZodNumber;
         useTargetAllocations: zod.ZodBoolean;
+        goals: zod.ZodArray<zod.ZodObject<{
+            id: zod.ZodString;
+            name: zod.ZodString;
+            targetAmount: zod.ZodNumber;
+            targetYear: zod.ZodNumber;
+        }, "strip", zod.ZodTypeAny, {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }, {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }>, "many">;
     }, "strip", zod.ZodTypeAny, {
         expenseModifier: number;
         incomeModifier: number;
@@ -859,6 +995,12 @@ export declare const ResetBudgetResponse: zod.ZodObject<{
         compoundingFrequency: "monthly" | "annual" | "quarterly";
         timeframeYears: number;
         useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
     }, {
         expenseModifier: number;
         incomeModifier: number;
@@ -867,6 +1009,12 @@ export declare const ResetBudgetResponse: zod.ZodObject<{
         compoundingFrequency: "monthly" | "annual" | "quarterly";
         timeframeYears: number;
         useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
     }>;
 }, "strip", zod.ZodTypeAny, {
     income: {
@@ -917,6 +1065,12 @@ export declare const ResetBudgetResponse: zod.ZodObject<{
         compoundingFrequency: "monthly" | "annual" | "quarterly";
         timeframeYears: number;
         useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
     };
 }, {
     income: {
@@ -967,6 +1121,815 @@ export declare const ResetBudgetResponse: zod.ZodObject<{
         compoundingFrequency: "monthly" | "annual" | "quarterly";
         timeframeYears: number;
         useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
+    };
+}>;
+/**
+ * @summary Balance sheet for saved profile (JSON)
+ */
+export declare const GetBalanceSheetResponse: zod.ZodObject<{
+    generatedAt: zod.ZodString;
+    sections: zod.ZodArray<zod.ZodObject<{
+        id: zod.ZodString;
+        title: zod.ZodString;
+        rows: zod.ZodArray<zod.ZodObject<{
+            rowType: zod.ZodString;
+            id: zod.ZodOptional<zod.ZodString>;
+            name: zod.ZodString;
+            amount: zod.ZodOptional<zod.ZodNullable<zod.ZodNumber>>;
+            amountAnnualized: zod.ZodOptional<zod.ZodNullable<zod.ZodNumber>>;
+            amountScenarioAnnualized: zod.ZodOptional<zod.ZodNullable<zod.ZodNumber>>;
+            unit: zod.ZodOptional<zod.ZodString>;
+            frequency: zod.ZodOptional<zod.ZodString>;
+            returnRate: zod.ZodOptional<zod.ZodNullable<zod.ZodNumber>>;
+            pctCurrent: zod.ZodOptional<zod.ZodNullable<zod.ZodNumber>>;
+            pctTarget: zod.ZodOptional<zod.ZodNullable<zod.ZodNumber>>;
+            note: zod.ZodOptional<zod.ZodString>;
+        }, "strip", zod.ZodTypeAny, {
+            name: string;
+            rowType: string;
+            id?: string | undefined;
+            amount?: number | null | undefined;
+            frequency?: string | undefined;
+            returnRate?: number | null | undefined;
+            amountAnnualized?: number | null | undefined;
+            amountScenarioAnnualized?: number | null | undefined;
+            unit?: string | undefined;
+            pctCurrent?: number | null | undefined;
+            pctTarget?: number | null | undefined;
+            note?: string | undefined;
+        }, {
+            name: string;
+            rowType: string;
+            id?: string | undefined;
+            amount?: number | null | undefined;
+            frequency?: string | undefined;
+            returnRate?: number | null | undefined;
+            amountAnnualized?: number | null | undefined;
+            amountScenarioAnnualized?: number | null | undefined;
+            unit?: string | undefined;
+            pctCurrent?: number | null | undefined;
+            pctTarget?: number | null | undefined;
+            note?: string | undefined;
+        }>, "many">;
+    }, "strip", zod.ZodTypeAny, {
+        id: string;
+        title: string;
+        rows: {
+            name: string;
+            rowType: string;
+            id?: string | undefined;
+            amount?: number | null | undefined;
+            frequency?: string | undefined;
+            returnRate?: number | null | undefined;
+            amountAnnualized?: number | null | undefined;
+            amountScenarioAnnualized?: number | null | undefined;
+            unit?: string | undefined;
+            pctCurrent?: number | null | undefined;
+            pctTarget?: number | null | undefined;
+            note?: string | undefined;
+        }[];
+    }, {
+        id: string;
+        title: string;
+        rows: {
+            name: string;
+            rowType: string;
+            id?: string | undefined;
+            amount?: number | null | undefined;
+            frequency?: string | undefined;
+            returnRate?: number | null | undefined;
+            amountAnnualized?: number | null | undefined;
+            amountScenarioAnnualized?: number | null | undefined;
+            unit?: string | undefined;
+            pctCurrent?: number | null | undefined;
+            pctTarget?: number | null | undefined;
+            note?: string | undefined;
+        }[];
+    }>, "many">;
+}, "strip", zod.ZodTypeAny, {
+    generatedAt: string;
+    sections: {
+        id: string;
+        title: string;
+        rows: {
+            name: string;
+            rowType: string;
+            id?: string | undefined;
+            amount?: number | null | undefined;
+            frequency?: string | undefined;
+            returnRate?: number | null | undefined;
+            amountAnnualized?: number | null | undefined;
+            amountScenarioAnnualized?: number | null | undefined;
+            unit?: string | undefined;
+            pctCurrent?: number | null | undefined;
+            pctTarget?: number | null | undefined;
+            note?: string | undefined;
+        }[];
+    }[];
+}, {
+    generatedAt: string;
+    sections: {
+        id: string;
+        title: string;
+        rows: {
+            name: string;
+            rowType: string;
+            id?: string | undefined;
+            amount?: number | null | undefined;
+            frequency?: string | undefined;
+            returnRate?: number | null | undefined;
+            amountAnnualized?: number | null | undefined;
+            amountScenarioAnnualized?: number | null | undefined;
+            unit?: string | undefined;
+            pctCurrent?: number | null | undefined;
+            pctTarget?: number | null | undefined;
+            note?: string | undefined;
+        }[];
+    }[];
+}>;
+/**
+ * @summary Balance sheet from a financial profile payload (JSON)
+ */
+export declare const postBalanceSheetBodyActiveTradingRiskLevelMax = 10;
+export declare const PostBalanceSheetBody: zod.ZodObject<{
+    income: zod.ZodArray<zod.ZodObject<{
+        id: zod.ZodString;
+        name: zod.ZodString;
+        amount: zod.ZodNumber;
+        frequency: zod.ZodEnum<["monthly", "yearly"]>;
+    }, "strip", zod.ZodTypeAny, {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+    }, {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+    }>, "many">;
+    expenses: zod.ZodArray<zod.ZodObject<{
+        id: zod.ZodString;
+        name: zod.ZodString;
+        amount: zod.ZodNumber;
+        frequency: zod.ZodEnum<["monthly", "yearly"]>;
+    }, "strip", zod.ZodTypeAny, {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+    }, {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+    }>, "many">;
+    assets: zod.ZodArray<zod.ZodObject<{
+        id: zod.ZodString;
+        name: zod.ZodString;
+        amount: zod.ZodNumber;
+        returnRate: zod.ZodNumber;
+    }, "strip", zod.ZodTypeAny, {
+        id: string;
+        name: string;
+        amount: number;
+        returnRate: number;
+    }, {
+        id: string;
+        name: string;
+        amount: number;
+        returnRate: number;
+    }>, "many">;
+    investments: zod.ZodArray<zod.ZodObject<{
+        id: zod.ZodString;
+        name: zod.ZodString;
+        amount: zod.ZodNumber;
+        frequency: zod.ZodEnum<["monthly", "yearly"]>;
+        returnRate: zod.ZodNumber;
+    }, "strip", zod.ZodTypeAny, {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+        returnRate: number;
+    }, {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+        returnRate: number;
+    }>, "many">;
+    investmentBuckets: zod.ZodArray<zod.ZodObject<{
+        id: zod.ZodString;
+        name: zod.ZodString;
+        currentAllocationPct: zod.ZodNumber;
+        targetAllocationPct: zod.ZodNumber;
+        returnRate: zod.ZodNumber;
+    }, "strip", zod.ZodTypeAny, {
+        id: string;
+        name: string;
+        returnRate: number;
+        currentAllocationPct: number;
+        targetAllocationPct: number;
+    }, {
+        id: string;
+        name: string;
+        returnRate: number;
+        currentAllocationPct: number;
+        targetAllocationPct: number;
+    }>, "many">;
+    activeTrading: zod.ZodObject<{
+        enabled: zod.ZodBoolean;
+        amount: zod.ZodNumber;
+        frequency: zod.ZodEnum<["monthly", "yearly"]>;
+        currentReturnRate: zod.ZodNumber;
+        targetReturnRate: zod.ZodNumber;
+        riskLevel: zod.ZodNumber;
+    }, "strip", zod.ZodTypeAny, {
+        amount: number;
+        frequency: "monthly" | "yearly";
+        enabled: boolean;
+        currentReturnRate: number;
+        targetReturnRate: number;
+        riskLevel: number;
+    }, {
+        amount: number;
+        frequency: "monthly" | "yearly";
+        enabled: boolean;
+        currentReturnRate: number;
+        targetReturnRate: number;
+        riskLevel: number;
+    }>;
+    scenarioSettings: zod.ZodObject<{
+        expenseModifier: zod.ZodNumber;
+        incomeModifier: zod.ZodNumber;
+        investmentReturnOverride: zod.ZodNumber;
+        inflationRate: zod.ZodNumber;
+        compoundingFrequency: zod.ZodEnum<["annual", "monthly", "quarterly"]>;
+        timeframeYears: zod.ZodNumber;
+        useTargetAllocations: zod.ZodBoolean;
+        goals: zod.ZodArray<zod.ZodObject<{
+            id: zod.ZodString;
+            name: zod.ZodString;
+            targetAmount: zod.ZodNumber;
+            targetYear: zod.ZodNumber;
+        }, "strip", zod.ZodTypeAny, {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }, {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }>, "many">;
+    }, "strip", zod.ZodTypeAny, {
+        expenseModifier: number;
+        incomeModifier: number;
+        investmentReturnOverride: number;
+        inflationRate: number;
+        compoundingFrequency: "monthly" | "annual" | "quarterly";
+        timeframeYears: number;
+        useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
+    }, {
+        expenseModifier: number;
+        incomeModifier: number;
+        investmentReturnOverride: number;
+        inflationRate: number;
+        compoundingFrequency: "monthly" | "annual" | "quarterly";
+        timeframeYears: number;
+        useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
+    }>;
+}, "strip", zod.ZodTypeAny, {
+    income: {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+    }[];
+    expenses: {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+    }[];
+    assets: {
+        id: string;
+        name: string;
+        amount: number;
+        returnRate: number;
+    }[];
+    investments: {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+        returnRate: number;
+    }[];
+    investmentBuckets: {
+        id: string;
+        name: string;
+        returnRate: number;
+        currentAllocationPct: number;
+        targetAllocationPct: number;
+    }[];
+    activeTrading: {
+        amount: number;
+        frequency: "monthly" | "yearly";
+        enabled: boolean;
+        currentReturnRate: number;
+        targetReturnRate: number;
+        riskLevel: number;
+    };
+    scenarioSettings: {
+        expenseModifier: number;
+        incomeModifier: number;
+        investmentReturnOverride: number;
+        inflationRate: number;
+        compoundingFrequency: "monthly" | "annual" | "quarterly";
+        timeframeYears: number;
+        useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
+    };
+}, {
+    income: {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+    }[];
+    expenses: {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+    }[];
+    assets: {
+        id: string;
+        name: string;
+        amount: number;
+        returnRate: number;
+    }[];
+    investments: {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+        returnRate: number;
+    }[];
+    investmentBuckets: {
+        id: string;
+        name: string;
+        returnRate: number;
+        currentAllocationPct: number;
+        targetAllocationPct: number;
+    }[];
+    activeTrading: {
+        amount: number;
+        frequency: "monthly" | "yearly";
+        enabled: boolean;
+        currentReturnRate: number;
+        targetReturnRate: number;
+        riskLevel: number;
+    };
+    scenarioSettings: {
+        expenseModifier: number;
+        incomeModifier: number;
+        investmentReturnOverride: number;
+        inflationRate: number;
+        compoundingFrequency: "monthly" | "annual" | "quarterly";
+        timeframeYears: number;
+        useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
+    };
+}>;
+export declare const PostBalanceSheetResponse: zod.ZodObject<{
+    generatedAt: zod.ZodString;
+    sections: zod.ZodArray<zod.ZodObject<{
+        id: zod.ZodString;
+        title: zod.ZodString;
+        rows: zod.ZodArray<zod.ZodObject<{
+            rowType: zod.ZodString;
+            id: zod.ZodOptional<zod.ZodString>;
+            name: zod.ZodString;
+            amount: zod.ZodOptional<zod.ZodNullable<zod.ZodNumber>>;
+            amountAnnualized: zod.ZodOptional<zod.ZodNullable<zod.ZodNumber>>;
+            amountScenarioAnnualized: zod.ZodOptional<zod.ZodNullable<zod.ZodNumber>>;
+            unit: zod.ZodOptional<zod.ZodString>;
+            frequency: zod.ZodOptional<zod.ZodString>;
+            returnRate: zod.ZodOptional<zod.ZodNullable<zod.ZodNumber>>;
+            pctCurrent: zod.ZodOptional<zod.ZodNullable<zod.ZodNumber>>;
+            pctTarget: zod.ZodOptional<zod.ZodNullable<zod.ZodNumber>>;
+            note: zod.ZodOptional<zod.ZodString>;
+        }, "strip", zod.ZodTypeAny, {
+            name: string;
+            rowType: string;
+            id?: string | undefined;
+            amount?: number | null | undefined;
+            frequency?: string | undefined;
+            returnRate?: number | null | undefined;
+            amountAnnualized?: number | null | undefined;
+            amountScenarioAnnualized?: number | null | undefined;
+            unit?: string | undefined;
+            pctCurrent?: number | null | undefined;
+            pctTarget?: number | null | undefined;
+            note?: string | undefined;
+        }, {
+            name: string;
+            rowType: string;
+            id?: string | undefined;
+            amount?: number | null | undefined;
+            frequency?: string | undefined;
+            returnRate?: number | null | undefined;
+            amountAnnualized?: number | null | undefined;
+            amountScenarioAnnualized?: number | null | undefined;
+            unit?: string | undefined;
+            pctCurrent?: number | null | undefined;
+            pctTarget?: number | null | undefined;
+            note?: string | undefined;
+        }>, "many">;
+    }, "strip", zod.ZodTypeAny, {
+        id: string;
+        title: string;
+        rows: {
+            name: string;
+            rowType: string;
+            id?: string | undefined;
+            amount?: number | null | undefined;
+            frequency?: string | undefined;
+            returnRate?: number | null | undefined;
+            amountAnnualized?: number | null | undefined;
+            amountScenarioAnnualized?: number | null | undefined;
+            unit?: string | undefined;
+            pctCurrent?: number | null | undefined;
+            pctTarget?: number | null | undefined;
+            note?: string | undefined;
+        }[];
+    }, {
+        id: string;
+        title: string;
+        rows: {
+            name: string;
+            rowType: string;
+            id?: string | undefined;
+            amount?: number | null | undefined;
+            frequency?: string | undefined;
+            returnRate?: number | null | undefined;
+            amountAnnualized?: number | null | undefined;
+            amountScenarioAnnualized?: number | null | undefined;
+            unit?: string | undefined;
+            pctCurrent?: number | null | undefined;
+            pctTarget?: number | null | undefined;
+            note?: string | undefined;
+        }[];
+    }>, "many">;
+}, "strip", zod.ZodTypeAny, {
+    generatedAt: string;
+    sections: {
+        id: string;
+        title: string;
+        rows: {
+            name: string;
+            rowType: string;
+            id?: string | undefined;
+            amount?: number | null | undefined;
+            frequency?: string | undefined;
+            returnRate?: number | null | undefined;
+            amountAnnualized?: number | null | undefined;
+            amountScenarioAnnualized?: number | null | undefined;
+            unit?: string | undefined;
+            pctCurrent?: number | null | undefined;
+            pctTarget?: number | null | undefined;
+            note?: string | undefined;
+        }[];
+    }[];
+}, {
+    generatedAt: string;
+    sections: {
+        id: string;
+        title: string;
+        rows: {
+            name: string;
+            rowType: string;
+            id?: string | undefined;
+            amount?: number | null | undefined;
+            frequency?: string | undefined;
+            returnRate?: number | null | undefined;
+            amountAnnualized?: number | null | undefined;
+            amountScenarioAnnualized?: number | null | undefined;
+            unit?: string | undefined;
+            pctCurrent?: number | null | undefined;
+            pctTarget?: number | null | undefined;
+            note?: string | undefined;
+        }[];
+    }[];
+}>;
+/**
+ * @summary Export balance sheet as CSV from profile body
+ */
+export declare const postBalanceSheetExportCsvBodyActiveTradingRiskLevelMax = 10;
+export declare const PostBalanceSheetExportCsvBody: zod.ZodObject<{
+    income: zod.ZodArray<zod.ZodObject<{
+        id: zod.ZodString;
+        name: zod.ZodString;
+        amount: zod.ZodNumber;
+        frequency: zod.ZodEnum<["monthly", "yearly"]>;
+    }, "strip", zod.ZodTypeAny, {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+    }, {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+    }>, "many">;
+    expenses: zod.ZodArray<zod.ZodObject<{
+        id: zod.ZodString;
+        name: zod.ZodString;
+        amount: zod.ZodNumber;
+        frequency: zod.ZodEnum<["monthly", "yearly"]>;
+    }, "strip", zod.ZodTypeAny, {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+    }, {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+    }>, "many">;
+    assets: zod.ZodArray<zod.ZodObject<{
+        id: zod.ZodString;
+        name: zod.ZodString;
+        amount: zod.ZodNumber;
+        returnRate: zod.ZodNumber;
+    }, "strip", zod.ZodTypeAny, {
+        id: string;
+        name: string;
+        amount: number;
+        returnRate: number;
+    }, {
+        id: string;
+        name: string;
+        amount: number;
+        returnRate: number;
+    }>, "many">;
+    investments: zod.ZodArray<zod.ZodObject<{
+        id: zod.ZodString;
+        name: zod.ZodString;
+        amount: zod.ZodNumber;
+        frequency: zod.ZodEnum<["monthly", "yearly"]>;
+        returnRate: zod.ZodNumber;
+    }, "strip", zod.ZodTypeAny, {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+        returnRate: number;
+    }, {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+        returnRate: number;
+    }>, "many">;
+    investmentBuckets: zod.ZodArray<zod.ZodObject<{
+        id: zod.ZodString;
+        name: zod.ZodString;
+        currentAllocationPct: zod.ZodNumber;
+        targetAllocationPct: zod.ZodNumber;
+        returnRate: zod.ZodNumber;
+    }, "strip", zod.ZodTypeAny, {
+        id: string;
+        name: string;
+        returnRate: number;
+        currentAllocationPct: number;
+        targetAllocationPct: number;
+    }, {
+        id: string;
+        name: string;
+        returnRate: number;
+        currentAllocationPct: number;
+        targetAllocationPct: number;
+    }>, "many">;
+    activeTrading: zod.ZodObject<{
+        enabled: zod.ZodBoolean;
+        amount: zod.ZodNumber;
+        frequency: zod.ZodEnum<["monthly", "yearly"]>;
+        currentReturnRate: zod.ZodNumber;
+        targetReturnRate: zod.ZodNumber;
+        riskLevel: zod.ZodNumber;
+    }, "strip", zod.ZodTypeAny, {
+        amount: number;
+        frequency: "monthly" | "yearly";
+        enabled: boolean;
+        currentReturnRate: number;
+        targetReturnRate: number;
+        riskLevel: number;
+    }, {
+        amount: number;
+        frequency: "monthly" | "yearly";
+        enabled: boolean;
+        currentReturnRate: number;
+        targetReturnRate: number;
+        riskLevel: number;
+    }>;
+    scenarioSettings: zod.ZodObject<{
+        expenseModifier: zod.ZodNumber;
+        incomeModifier: zod.ZodNumber;
+        investmentReturnOverride: zod.ZodNumber;
+        inflationRate: zod.ZodNumber;
+        compoundingFrequency: zod.ZodEnum<["annual", "monthly", "quarterly"]>;
+        timeframeYears: zod.ZodNumber;
+        useTargetAllocations: zod.ZodBoolean;
+        goals: zod.ZodArray<zod.ZodObject<{
+            id: zod.ZodString;
+            name: zod.ZodString;
+            targetAmount: zod.ZodNumber;
+            targetYear: zod.ZodNumber;
+        }, "strip", zod.ZodTypeAny, {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }, {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }>, "many">;
+    }, "strip", zod.ZodTypeAny, {
+        expenseModifier: number;
+        incomeModifier: number;
+        investmentReturnOverride: number;
+        inflationRate: number;
+        compoundingFrequency: "monthly" | "annual" | "quarterly";
+        timeframeYears: number;
+        useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
+    }, {
+        expenseModifier: number;
+        incomeModifier: number;
+        investmentReturnOverride: number;
+        inflationRate: number;
+        compoundingFrequency: "monthly" | "annual" | "quarterly";
+        timeframeYears: number;
+        useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
+    }>;
+}, "strip", zod.ZodTypeAny, {
+    income: {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+    }[];
+    expenses: {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+    }[];
+    assets: {
+        id: string;
+        name: string;
+        amount: number;
+        returnRate: number;
+    }[];
+    investments: {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+        returnRate: number;
+    }[];
+    investmentBuckets: {
+        id: string;
+        name: string;
+        returnRate: number;
+        currentAllocationPct: number;
+        targetAllocationPct: number;
+    }[];
+    activeTrading: {
+        amount: number;
+        frequency: "monthly" | "yearly";
+        enabled: boolean;
+        currentReturnRate: number;
+        targetReturnRate: number;
+        riskLevel: number;
+    };
+    scenarioSettings: {
+        expenseModifier: number;
+        incomeModifier: number;
+        investmentReturnOverride: number;
+        inflationRate: number;
+        compoundingFrequency: "monthly" | "annual" | "quarterly";
+        timeframeYears: number;
+        useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
+    };
+}, {
+    income: {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+    }[];
+    expenses: {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+    }[];
+    assets: {
+        id: string;
+        name: string;
+        amount: number;
+        returnRate: number;
+    }[];
+    investments: {
+        id: string;
+        name: string;
+        amount: number;
+        frequency: "monthly" | "yearly";
+        returnRate: number;
+    }[];
+    investmentBuckets: {
+        id: string;
+        name: string;
+        returnRate: number;
+        currentAllocationPct: number;
+        targetAllocationPct: number;
+    }[];
+    activeTrading: {
+        amount: number;
+        frequency: "monthly" | "yearly";
+        enabled: boolean;
+        currentReturnRate: number;
+        targetReturnRate: number;
+        riskLevel: number;
+    };
+    scenarioSettings: {
+        expenseModifier: number;
+        incomeModifier: number;
+        investmentReturnOverride: number;
+        inflationRate: number;
+        compoundingFrequency: "monthly" | "annual" | "quarterly";
+        timeframeYears: number;
+        useTargetAllocations: boolean;
+        goals: {
+            id: string;
+            name: string;
+            targetAmount: number;
+            targetYear: number;
+        }[];
     };
 }>;
 //# sourceMappingURL=api.d.ts.map

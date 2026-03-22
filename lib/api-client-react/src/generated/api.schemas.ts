@@ -89,6 +89,14 @@ export interface ActiveTradingConfig {
   riskLevel: number;
 }
 
+export interface FinancialGoal {
+  id: string;
+  name: string;
+  targetAmount: number;
+  /** Relative projection year for the goal */
+  targetYear: number;
+}
+
 export type ScenarioSettingsCompoundingFrequency =
   (typeof ScenarioSettingsCompoundingFrequency)[keyof typeof ScenarioSettingsCompoundingFrequency];
 
@@ -97,13 +105,6 @@ export const ScenarioSettingsCompoundingFrequency = {
   monthly: "monthly",
   quarterly: "quarterly",
 } as const;
-
-export interface FinancialGoal {
-  id: string;
-  name: string;
-  targetAmount: number;
-  targetYear: number;
-}
 
 export interface ScenarioSettings {
   expenseModifier: number;
@@ -115,7 +116,34 @@ export interface ScenarioSettings {
   timeframeYears: number;
   /** When true, use targetAllocationPct instead of currentAllocationPct for buckets */
   useTargetAllocations: boolean;
-  goals?: FinancialGoal[];
+  goals: FinancialGoal[];
+}
+
+export interface BalanceSheetRow {
+  /** header | line | subtotal */
+  rowType: string;
+  id?: string;
+  name: string;
+  amount?: number | null;
+  amountAnnualized?: number | null;
+  amountScenarioAnnualized?: number | null;
+  unit?: string;
+  frequency?: string;
+  returnRate?: number | null;
+  pctCurrent?: number | null;
+  pctTarget?: number | null;
+  note?: string;
+}
+
+export interface BalanceSheetSection {
+  id: string;
+  title: string;
+  rows: BalanceSheetRow[];
+}
+
+export interface BalanceSheetResponse {
+  generatedAt: string;
+  sections: BalanceSheetSection[];
 }
 
 export interface FinancialProfile {

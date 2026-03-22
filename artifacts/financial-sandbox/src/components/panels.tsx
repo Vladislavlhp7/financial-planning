@@ -264,14 +264,14 @@ function BucketEditor({
 // ── Active Trading Panel ─────────────────────────────────────────────────────
 
 export function ActiveTradingPanel({ profile, updateProfile }: PanelProps) {
+  const raw = profile.activeTrading;
   const at = {
-    enabled: false,
-    amount: 0,
-    currentReturnRate: 0,
-    targetReturnRate: 0,
-    riskLevel: 5,
-    ...(profile.activeTrading ?? {}),
-    frequency: normalizeContributionFrequency(profile.activeTrading?.frequency),
+    enabled: raw?.enabled ?? false,
+    amount: raw?.amount ?? 0,
+    frequency: normalizeContributionFrequency(raw?.frequency),
+    currentReturnRate: raw?.currentReturnRate ?? 0,
+    targetReturnRate: raw?.targetReturnRate ?? 0,
+    riskLevel: raw?.riskLevel ?? 5,
   };
 
   const update = (patch: Partial<typeof at>) => {

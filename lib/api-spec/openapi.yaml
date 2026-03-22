@@ -68,6 +68,56 @@ paths:
               schema:
                 $ref: "#/components/schemas/FinancialProfile"
 
+  /budget/balance-sheet:
+    get:
+      operationId: getBalanceSheet
+      tags: [financial]
+      summary: Balance sheet for saved profile (JSON)
+      responses:
+        "200":
+          description: Grouped balance sheet sections
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BalanceSheetResponse"
+    post:
+      operationId: postBalanceSheet
+      tags: [financial]
+      summary: Balance sheet from a financial profile payload (JSON)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FinancialProfile"
+      responses:
+        "200":
+          description: Grouped balance sheet sections
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BalanceSheetResponse"
+
+  /budget/balance-sheet/export.csv:
+    post:
+      operationId: postBalanceSheetExportCsv
+      tags: [financial]
+      summary: Export balance sheet as CSV from profile body
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FinancialProfile"
+      responses:
+        "200":
+          description: CSV file
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+
 components:
   schemas:
     HealthStatus:
@@ -189,6 +239,24 @@ components:
         - targetReturnRate
         - riskLevel
 
+    FinancialGoal:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        targetAmount:
+          type: number
+        targetYear:
+          type: number
+          description: Relative projection year for the goal
+      required:
+        - id
+        - name
+        - targetAmount
+        - targetYear
+
     ScenarioSettings:
       type: object
       properties:
@@ -209,6 +277,10 @@ components:
         useTargetAllocations:
           type: boolean
           description: When true, use targetAllocationPct instead of currentAllocationPct for buckets
+        goals:
+          type: array
+          items:
+            $ref: "#/components/schemas/FinancialGoal"
       required:
         - expenseModifier
         - incomeModifier
@@ -217,6 +289,74 @@ components:
         - compoundingFrequency
         - timeframeYears
         - useTargetAllocations
+        - goals
+
+    BalanceSheetRow:
+      type: object
+      required:
+        - rowType
+        - name
+      properties:
+        rowType:
+          type: string
+          description: header | line | subtotal
+        id:
+          type: string
+        name:
+          type: string
+        amount:
+          type: number
+          nullable: true
+        amountAnnualized:
+          type: number
+          nullable: true
+        amountScenarioAnnualized:
+          type: number
+          nullable: true
+        unit:
+          type: string
+        frequency:
+          type: string
+        returnRate:
+          type: number
+          nullable: true
+        pctCurrent:
+          type: number
+          nullable: true
+        pctTarget:
+          type: number
+          nullable: true
+        note:
+          type: string
+
+    BalanceSheetSection:
+      type: object
+      required:
+        - id
+        - title
+        - rows
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        rows:
+          type: array
+          items:
+            $ref: "#/components/schemas/BalanceSheetRow"
+
+    BalanceSheetResponse:
+      type: object
+      required:
+        - generatedAt
+        - sections
+      properties:
+        generatedAt:
+          type: string
+        sections:
+          type: array
+          items:
+            $ref: "#/components/schemas/BalanceSheetSection"
 
     FinancialProfile:
       type: object

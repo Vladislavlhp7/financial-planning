@@ -15,6 +15,7 @@ import {
 import { useMonteCarlo } from "@/hooks/use-montecarlo";
 import { ScenarioManager } from "@/components/scenario-manager";
 import { ScenarioCompare } from "@/components/scenario-compare";
+import { BalanceSheetPanel } from "@/components/balance-sheet-panel";
 import { Loader2, Save, LayoutDashboard, Settings2, SlidersHorizontal, Zap, BarChart3, Target, GitCompare } from "lucide-react";
 import type { FinancialProfile } from "@workspace/api-client-react";
 
@@ -303,6 +304,8 @@ export function Dashboard() {
               </div>
             </Card>
           </div>
+
+          <BalanceSheetPanel profile={profile} />
 
           {/* ── Analytics Section ─────────────────────────── */}
           <div className="flex items-center gap-3 pt-2">

@@ -1,6 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { debounce } from "lodash-es";
-import { useGetBudget, useUpdateBudget, useResetBudget } from "@workspace/api-client-react";
+import {
+  getGetBudgetQueryKey,
+  useGetBudget,
+  useUpdateBudget,
+  useResetBudget,
+} from "@workspace/api-client-react";
 import type { FinancialProfile } from "@workspace/api-client-react";
 
 export const DEFAULT_PROFILE: FinancialProfile = {
@@ -44,6 +49,7 @@ export function useBudgetState() {
 
   const { data: serverProfile, isLoading, isError } = useGetBudget({
     query: {
+      queryKey: getGetBudgetQueryKey(),
       retry: 1,
       refetchOnWindowFocus: false,
     },

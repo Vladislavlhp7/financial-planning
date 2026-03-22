@@ -1,52 +1,7 @@
 """Monte Carlo simulation for wealth projections."""
 import numpy as np
 from app.schemas.financial import FinancialProfile
-
-
-def _get_annual_amount(item: dict) -> float:
-    freq = item.get("frequency", "monthly")
-    amount = item.get("amount", 0)
-    return amount * 12 if freq == "monthly" else amount
-
-
-def _compute_summary(profile: dict) -> dict:
-    """Compute summary metrics from profile (mirrors frontend calculateSummary)."""
-    ss = profile.get("scenarioSettings", {})
-    buckets = profile.get("investmentBuckets", [])
-    at = profile.get("activeTrading", {})
-
-    raw_income = sum(_get_annual_amount(i) for i in profile.get("income", []))
-    raw_expenses = sum(_get_annual_amount(i) for i in profile.get("expenses", []))
-    raw_inv = sum(_get_annual_amount(i) for i in profile.get("investments", []))
-
-    income_mod = ss.get("incomeModifier", 1) or 1
-    expense_mod = ss.get("expenseModifier", 1) or 1
-
-    annual_income = raw_income * income_mod
-    annual_expenses = raw_expenses * expense_mod
-    annual_investments = raw_inv
-    annual_active = _get_annual_amount(at) if at.get("enabled") else 0
-    annual_net_cash = annual_income - annual_expenses - annual_investments - annual_active
-    total_assets = sum(a.get("amount", 0) for a in profile.get("assets", []))
-
-    use_target = ss.get("useTargetAllocations", False)
-    total_pct = sum(
-        b.get("targetAllocationPct" if use_target else "currentAllocationPct", 0)
-        for b in buckets
-    ) or 100
-
-    bucket_breakdown = []
-    for b in buckets:
-        pct = b.get("targetAllocationPct" if use_target else "currentAllocationPct", 0)
-        annual_amt = annual_investments * (pct / total_pct)
-        bucket_breakdown.append({"bucket": b, "annualAmount": annual_amt})
-
-    return {
-        "annualNetCashFlow": annual_net_cash,
-        "totalCurrentAssets": total_assets,
-        "bucketBreakdown": bucket_breakdown,
-        "annualInvestments": annual_investments,
-    }
+from app.services.profile_summary import compute_profile_summary, get_annual_amount
 
 
 def run_monte_carlo(profile: FinancialProfile, runs: int = 1000) -> list[dict]:
@@ -67,7 +22,7 @@ def run_monte_carlo(profile: FinancialProfile, runs: int = 1000) -> list[dict]:
         nominal = override if override >= 0 else base
         return max(-0.99, nominal - inflation)
 
-    summary = _compute_summary(data)
+    summary = compute_profile_summary(data)
     annual_net_cash = summary["annualNetCashFlow"]
     total_assets = summary["totalCurrentAssets"]
     bucket_breakdown = summary["bucketBreakdown"]
@@ -76,7 +31,7 @@ def run_monte_carlo(profile: FinancialProfile, runs: int = 1000) -> list[dict]:
         at.get("targetReturnRate", 0) if use_target else at.get("currentReturnRate", 0)
     )
     trading_enabled = at.get("enabled", False)
-    trading_annual = _get_annual_amount(at) if trading_enabled else 0
+    trading_annual = get_annual_amount(at) if trading_enabled else 0
 
     key_years = [y for y in [0, 1, 2, 3, 5, 7, 10, 15, 20, 25, 30] if y <= years_to_project]
     if years_to_project not in key_years:
@@ -122,7 +77,7 @@ def run_monte_carlo(profile: FinancialProfile, runs: int = 1000) -> list[dict]:
             buckets_matrix += annuity_path(annual_amt, base_r, vol, max_year)
     else:
         for inv in investments:
-            annual_amt = _get_annual_amount(inv)
+            annual_amt = get_annual_amount(inv)
             base_r = inv.get("returnRate", 0)
             vol = abs(base_r) * 0.6
             buckets_matrix += annuity_path(annual_amt, base_r, vol, max_year)

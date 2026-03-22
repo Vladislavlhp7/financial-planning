@@ -5,6 +5,7 @@
  * Financial Sandbox API
  * OpenAPI spec version: 0.1.0
  */
+import type { FinancialGoal } from "./financialGoal";
 import type { ScenarioSettingsCompoundingFrequency } from "./scenarioSettingsCompoundingFrequency";
 
 export interface ScenarioSettings {
@@ -17,4 +18,5 @@ export interface ScenarioSettings {
   timeframeYears: number;
   /** When true, use targetAllocationPct instead of currentAllocationPct for buckets */
   useTargetAllocations: boolean;
+  goals: FinancialGoal[];
 }

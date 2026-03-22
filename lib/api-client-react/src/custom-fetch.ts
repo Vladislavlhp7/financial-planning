@@ -114,13 +114,26 @@ export async function customFetch<T = unknown>(
     throw new TypeError(`customFetch: ${method} requests cannot have a body.`);
   }
 
+  const headerRecord = { ...((options.headers as Record<string, string>) ?? {}) };
+  if (url.includes("/export.csv")) {
+    headerRecord.Accept = "text/csv, */*";
+  }
+
   const config: AxiosRequestConfig = {
     url,
     method: method as "get" | "post" | "put" | "patch" | "delete" | "head",
     data: options.body,
-    headers: options.headers as Record<string, string>,
-    signal: options.signal,
+    headers: headerRecord,
+    signal: options.signal ?? undefined,
   };
+
+  if (options.responseType === "blob") {
+    config.responseType = "blob";
+  } else if (options.responseType === "text") {
+    config.responseType = "text";
+  } else if (url.includes("/export.csv")) {
+    config.responseType = "blob";
+  }
 
   try {
     const response = await api.request(config);

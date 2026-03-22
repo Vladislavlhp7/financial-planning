@@ -16,7 +16,11 @@ import type {
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { FinancialProfile, HealthStatus } from "./api.schemas";
+import type {
+  BalanceSheetResponse,
+  FinancialProfile,
+  HealthStatus,
+} from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
 import type { ErrorType, BodyType } from "../custom-fetch";
@@ -334,4 +338,251 @@ export const useResetBudget = <
   TContext
 > => {
   return useMutation(getResetBudgetMutationOptions(options));
+};
+
+/**
+ * @summary Balance sheet for saved profile (JSON)
+ */
+export const getGetBalanceSheetUrl = () => {
+  return `/api/budget/balance-sheet`;
+};
+
+export const getBalanceSheet = async (
+  options?: RequestInit,
+): Promise<BalanceSheetResponse> => {
+  return customFetch<BalanceSheetResponse>(getGetBalanceSheetUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetBalanceSheetQueryKey = () => {
+  return [`/api/budget/balance-sheet`] as const;
+};
+
+export const getGetBalanceSheetQueryOptions = <
+  TData = Awaited<ReturnType<typeof getBalanceSheet>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getBalanceSheet>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetBalanceSheetQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getBalanceSheet>>> = ({
+    signal,
+  }) => getBalanceSheet({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getBalanceSheet>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetBalanceSheetQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getBalanceSheet>>
+>;
+export type GetBalanceSheetQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Balance sheet for saved profile (JSON)
+ */
+
+export function useGetBalanceSheet<
+  TData = Awaited<ReturnType<typeof getBalanceSheet>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getBalanceSheet>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetBalanceSheetQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Balance sheet from a financial profile payload (JSON)
+ */
+export const getPostBalanceSheetUrl = () => {
+  return `/api/budget/balance-sheet`;
+};
+
+export const postBalanceSheet = async (
+  financialProfile: FinancialProfile,
+  options?: RequestInit,
+): Promise<BalanceSheetResponse> => {
+  return customFetch<BalanceSheetResponse>(getPostBalanceSheetUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(financialProfile),
+  });
+};
+
+export const getPostBalanceSheetMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postBalanceSheet>>,
+    TError,
+    { data: BodyType<FinancialProfile> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof postBalanceSheet>>,
+  TError,
+  { data: BodyType<FinancialProfile> },
+  TContext
+> => {
+  const mutationKey = ["postBalanceSheet"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postBalanceSheet>>,
+    { data: BodyType<FinancialProfile> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return postBalanceSheet(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PostBalanceSheetMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postBalanceSheet>>
+>;
+export type PostBalanceSheetMutationBody = BodyType<FinancialProfile>;
+export type PostBalanceSheetMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Balance sheet from a financial profile payload (JSON)
+ */
+export const usePostBalanceSheet = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postBalanceSheet>>,
+    TError,
+    { data: BodyType<FinancialProfile> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof postBalanceSheet>>,
+  TError,
+  { data: BodyType<FinancialProfile> },
+  TContext
+> => {
+  return useMutation(getPostBalanceSheetMutationOptions(options));
+};
+
+/**
+ * @summary Export balance sheet as CSV from profile body
+ */
+export const getPostBalanceSheetExportCsvUrl = () => {
+  return `/api/budget/balance-sheet/export.csv`;
+};
+
+export const postBalanceSheetExportCsv = async (
+  financialProfile: FinancialProfile,
+  options?: RequestInit,
+): Promise<Blob> => {
+  return customFetch<Blob>(getPostBalanceSheetExportCsvUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(financialProfile),
+  });
+};
+
+export const getPostBalanceSheetExportCsvMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postBalanceSheetExportCsv>>,
+    TError,
+    { data: BodyType<FinancialProfile> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof postBalanceSheetExportCsv>>,
+  TError,
+  { data: BodyType<FinancialProfile> },
+  TContext
+> => {
+  const mutationKey = ["postBalanceSheetExportCsv"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postBalanceSheetExportCsv>>,
+    { data: BodyType<FinancialProfile> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return postBalanceSheetExportCsv(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PostBalanceSheetExportCsvMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postBalanceSheetExportCsv>>
+>;
+export type PostBalanceSheetExportCsvMutationBody = BodyType<FinancialProfile>;
+export type PostBalanceSheetExportCsvMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Export balance sheet as CSV from profile body
+ */
+export const usePostBalanceSheetExportCsv = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postBalanceSheetExportCsv>>,
+    TError,
+    { data: BodyType<FinancialProfile> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof postBalanceSheetExportCsv>>,
+  TError,
+  { data: BodyType<FinancialProfile> },
+  TContext
+> => {
+  return useMutation(getPostBalanceSheetExportCsvMutationOptions(options));
 };

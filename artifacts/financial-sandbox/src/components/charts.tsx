@@ -364,6 +364,64 @@ export function BreakdownDonutChart({
   );
 }
 
+const ASSET_MIX_HUES = [160, 230, 280, 38, 195, 340, 25, 310];
+
+export function AssetMixPieChart({
+  assets,
+}: {
+  assets: { id: string; name: string; amount: number }[];
+}) {
+  const data = assets
+    .filter((a) => a.amount > 0)
+    .map((a, i) => ({
+      name: a.name,
+      value: a.amount,
+      color: `hsl(${ASSET_MIX_HUES[i % ASSET_MIX_HUES.length]} 70% 52%)`,
+    }));
+
+  if (!data.length) {
+    return (
+      <p className="text-sm text-muted-foreground text-center py-8 border border-dashed border-border rounded-xl">
+        Add assets to see allocation
+      </p>
+    );
+  }
+
+  return (
+    <div className="w-full h-[260px]">
+      <ResponsiveContainer width="100%" height="100%">
+        <RechartsPieChart>
+          <Pie
+            data={data}
+            cx="50%"
+            cy="50%"
+            innerRadius={56}
+            outerRadius={88}
+            paddingAngle={4}
+            dataKey="value"
+            stroke="none"
+            cornerRadius={6}
+          >
+            {data.map((entry, index) => (
+              <Cell key={`asset-${entry.name}-${index}`} fill={entry.color} />
+            ))}
+          </Pie>
+          <Tooltip
+            formatter={(val: number) => formatCurrency(val, true)}
+            contentStyle={{
+              backgroundColor: "hsl(0 0% 7%)",
+              borderColor: "hsl(0 0% 15%)",
+              borderRadius: "12px",
+            }}
+            itemStyle={{ color: "#fff" }}
+          />
+          <Legend verticalAlign="bottom" height={32} iconType="circle" wrapperStyle={{ fontSize: "11px" }} />
+        </RechartsPieChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
 // ── Income Allocation Chart ─────────────────────────────────────────────────
 export function IncomeAllocationChart({ allocation }: { allocation: IncomeAllocation[] }) {
   return (

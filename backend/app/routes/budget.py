@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -6,7 +6,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.constants import DEFAULT_PROFILE_DATA, DEFAULT_USER_ID
 from app.db.models import FinancialProfile as FinancialProfileModel
 from app.db.session import get_db
+from app.schemas.balance_sheet import BalanceSheetResponse
 from app.schemas.financial import FinancialProfile
+from app.services.balance_sheet import (
+    balance_sheet_csv_filename,
+    balance_sheet_to_csv,
+    build_balance_sheet_response,
+)
 
 router = APIRouter()
 
@@ -72,3 +78,29 @@ async def update_budget(profile: FinancialProfile, db: AsyncSession = Depends(ge
 async def reset_budget(db: AsyncSession = Depends(get_db)) -> dict:
     await save_profile(db, DEFAULT_PROFILE_DATA)
     return DEFAULT_PROFILE_DATA
+
+
+@router.get("/budget/balance-sheet", response_model=BalanceSheetResponse)
+async def get_balance_sheet(db: AsyncSession = Depends(get_db)) -> BalanceSheetResponse:
+    data = await get_or_create_profile(db)
+    profile = FinancialProfile.model_validate(data)
+    return build_balance_sheet_response(profile)
+
+
+@router.post("/budget/balance-sheet", response_model=BalanceSheetResponse)
+async def post_balance_sheet(profile: FinancialProfile) -> BalanceSheetResponse:
+    return build_balance_sheet_response(profile)
+
+
+@router.post("/budget/balance-sheet/export.csv")
+async def post_balance_sheet_csv(profile: FinancialProfile) -> Response:
+    sheet = build_balance_sheet_response(profile)
+    csv_body = balance_sheet_to_csv(sheet)
+    filename = balance_sheet_csv_filename()
+    return Response(
+        content=csv_body.encode("utf-8"),
+        media_type="text/csv; charset=utf-8",
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"',
+        },
+    )

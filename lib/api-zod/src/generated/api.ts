@@ -116,6 +116,16 @@ export const GetBudgetResponse = zod.object({
       .describe(
         "When true, use targetAllocationPct instead of currentAllocationPct for buckets",
       ),
+    goals: zod.array(
+      zod.object({
+        id: zod.string(),
+        name: zod.string(),
+        targetAmount: zod.number(),
+        targetYear: zod
+          .number()
+          .describe("Relative projection year for the goal"),
+      }),
+    ),
   }),
 });
 
@@ -221,6 +231,16 @@ export const UpdateBudgetBody = zod.object({
       .describe(
         "When true, use targetAllocationPct instead of currentAllocationPct for buckets",
       ),
+    goals: zod.array(
+      zod.object({
+        id: zod.string(),
+        name: zod.string(),
+        targetAmount: zod.number(),
+        targetYear: zod
+          .number()
+          .describe("Relative projection year for the goal"),
+      }),
+    ),
   }),
 });
 
@@ -323,6 +343,16 @@ export const UpdateBudgetResponse = zod.object({
       .describe(
         "When true, use targetAllocationPct instead of currentAllocationPct for buckets",
       ),
+    goals: zod.array(
+      zod.object({
+        id: zod.string(),
+        name: zod.string(),
+        targetAmount: zod.number(),
+        targetYear: zod
+          .number()
+          .describe("Relative projection year for the goal"),
+      }),
+    ),
   }),
 });
 
@@ -428,5 +458,300 @@ export const ResetBudgetResponse = zod.object({
       .describe(
         "When true, use targetAllocationPct instead of currentAllocationPct for buckets",
       ),
+    goals: zod.array(
+      zod.object({
+        id: zod.string(),
+        name: zod.string(),
+        targetAmount: zod.number(),
+        targetYear: zod
+          .number()
+          .describe("Relative projection year for the goal"),
+      }),
+    ),
+  }),
+});
+
+/**
+ * @summary Balance sheet for saved profile (JSON)
+ */
+export const GetBalanceSheetResponse = zod.object({
+  generatedAt: zod.string(),
+  sections: zod.array(
+    zod.object({
+      id: zod.string(),
+      title: zod.string(),
+      rows: zod.array(
+        zod.object({
+          rowType: zod.string().describe("header | line | subtotal"),
+          id: zod.string().optional(),
+          name: zod.string(),
+          amount: zod.number().nullish(),
+          amountAnnualized: zod.number().nullish(),
+          amountScenarioAnnualized: zod.number().nullish(),
+          unit: zod.string().optional(),
+          frequency: zod.string().optional(),
+          returnRate: zod.number().nullish(),
+          pctCurrent: zod.number().nullish(),
+          pctTarget: zod.number().nullish(),
+          note: zod.string().optional(),
+        }),
+      ),
+    }),
+  ),
+});
+
+/**
+ * @summary Balance sheet from a financial profile payload (JSON)
+ */
+export const postBalanceSheetBodyActiveTradingRiskLevelMax = 10;
+
+export const PostBalanceSheetBody = zod.object({
+  income: zod.array(
+    zod.object({
+      id: zod.string(),
+      name: zod.string(),
+      amount: zod.number(),
+      frequency: zod.enum(["monthly", "yearly"]),
+    }),
+  ),
+  expenses: zod.array(
+    zod.object({
+      id: zod.string(),
+      name: zod.string(),
+      amount: zod.number(),
+      frequency: zod.enum(["monthly", "yearly"]),
+    }),
+  ),
+  assets: zod.array(
+    zod.object({
+      id: zod.string(),
+      name: zod.string(),
+      amount: zod.number(),
+      returnRate: zod.number(),
+    }),
+  ),
+  investments: zod.array(
+    zod.object({
+      id: zod.string(),
+      name: zod.string(),
+      amount: zod.number(),
+      frequency: zod.enum(["monthly", "yearly"]),
+      returnRate: zod.number(),
+    }),
+  ),
+  investmentBuckets: zod
+    .array(
+      zod
+        .object({
+          id: zod.string(),
+          name: zod.string(),
+          currentAllocationPct: zod
+            .number()
+            .describe(
+              "Current percentage allocation of the total investment pool (0-100)",
+            ),
+          targetAllocationPct: zod
+            .number()
+            .describe("Target (what-if) percentage allocation (0-100)"),
+          returnRate: zod
+            .number()
+            .describe(
+              "Expected annual return rate as a decimal (e.g. 0.08 for 8%)",
+            ),
+        })
+        .describe(
+          "A named allocation pocket within the total rolling investment pool",
+        ),
+    )
+    .describe("Percentage-split allocation buckets within the investment pool"),
+  activeTrading: zod
+    .object({
+      enabled: zod.boolean(),
+      amount: zod.number().describe("Contribution amount"),
+      frequency: zod.enum(["monthly", "yearly"]),
+      currentReturnRate: zod
+        .number()
+        .describe(
+          "Current expected annual return (can be negative), as a decimal",
+        ),
+      targetReturnRate: zod
+        .number()
+        .describe("Target (what-if) annual return, as a decimal"),
+      riskLevel: zod
+        .number()
+        .min(1)
+        .max(postBalanceSheetBodyActiveTradingRiskLevelMax)
+        .describe("Subjective risk level from 1 (low) to 10 (extreme)"),
+    })
+    .describe(
+      "Special active trading pocket with its own contribution and return rates",
+    ),
+  scenarioSettings: zod.object({
+    expenseModifier: zod.number(),
+    incomeModifier: zod.number(),
+    investmentReturnOverride: zod
+      .number()
+      .describe(
+        "Override annual return for all investments (-1 = use individual rates)",
+      ),
+    inflationRate: zod.number(),
+    compoundingFrequency: zod.enum(["annual", "monthly", "quarterly"]),
+    timeframeYears: zod.number(),
+    useTargetAllocations: zod
+      .boolean()
+      .describe(
+        "When true, use targetAllocationPct instead of currentAllocationPct for buckets",
+      ),
+    goals: zod.array(
+      zod.object({
+        id: zod.string(),
+        name: zod.string(),
+        targetAmount: zod.number(),
+        targetYear: zod
+          .number()
+          .describe("Relative projection year for the goal"),
+      }),
+    ),
+  }),
+});
+
+export const PostBalanceSheetResponse = zod.object({
+  generatedAt: zod.string(),
+  sections: zod.array(
+    zod.object({
+      id: zod.string(),
+      title: zod.string(),
+      rows: zod.array(
+        zod.object({
+          rowType: zod.string().describe("header | line | subtotal"),
+          id: zod.string().optional(),
+          name: zod.string(),
+          amount: zod.number().nullish(),
+          amountAnnualized: zod.number().nullish(),
+          amountScenarioAnnualized: zod.number().nullish(),
+          unit: zod.string().optional(),
+          frequency: zod.string().optional(),
+          returnRate: zod.number().nullish(),
+          pctCurrent: zod.number().nullish(),
+          pctTarget: zod.number().nullish(),
+          note: zod.string().optional(),
+        }),
+      ),
+    }),
+  ),
+});
+
+/**
+ * @summary Export balance sheet as CSV from profile body
+ */
+export const postBalanceSheetExportCsvBodyActiveTradingRiskLevelMax = 10;
+
+export const PostBalanceSheetExportCsvBody = zod.object({
+  income: zod.array(
+    zod.object({
+      id: zod.string(),
+      name: zod.string(),
+      amount: zod.number(),
+      frequency: zod.enum(["monthly", "yearly"]),
+    }),
+  ),
+  expenses: zod.array(
+    zod.object({
+      id: zod.string(),
+      name: zod.string(),
+      amount: zod.number(),
+      frequency: zod.enum(["monthly", "yearly"]),
+    }),
+  ),
+  assets: zod.array(
+    zod.object({
+      id: zod.string(),
+      name: zod.string(),
+      amount: zod.number(),
+      returnRate: zod.number(),
+    }),
+  ),
+  investments: zod.array(
+    zod.object({
+      id: zod.string(),
+      name: zod.string(),
+      amount: zod.number(),
+      frequency: zod.enum(["monthly", "yearly"]),
+      returnRate: zod.number(),
+    }),
+  ),
+  investmentBuckets: zod
+    .array(
+      zod
+        .object({
+          id: zod.string(),
+          name: zod.string(),
+          currentAllocationPct: zod
+            .number()
+            .describe(
+              "Current percentage allocation of the total investment pool (0-100)",
+            ),
+          targetAllocationPct: zod
+            .number()
+            .describe("Target (what-if) percentage allocation (0-100)"),
+          returnRate: zod
+            .number()
+            .describe(
+              "Expected annual return rate as a decimal (e.g. 0.08 for 8%)",
+            ),
+        })
+        .describe(
+          "A named allocation pocket within the total rolling investment pool",
+        ),
+    )
+    .describe("Percentage-split allocation buckets within the investment pool"),
+  activeTrading: zod
+    .object({
+      enabled: zod.boolean(),
+      amount: zod.number().describe("Contribution amount"),
+      frequency: zod.enum(["monthly", "yearly"]),
+      currentReturnRate: zod
+        .number()
+        .describe(
+          "Current expected annual return (can be negative), as a decimal",
+        ),
+      targetReturnRate: zod
+        .number()
+        .describe("Target (what-if) annual return, as a decimal"),
+      riskLevel: zod
+        .number()
+        .min(1)
+        .max(postBalanceSheetExportCsvBodyActiveTradingRiskLevelMax)
+        .describe("Subjective risk level from 1 (low) to 10 (extreme)"),
+    })
+    .describe(
+      "Special active trading pocket with its own contribution and return rates",
+    ),
+  scenarioSettings: zod.object({
+    expenseModifier: zod.number(),
+    incomeModifier: zod.number(),
+    investmentReturnOverride: zod
+      .number()
+      .describe(
+        "Override annual return for all investments (-1 = use individual rates)",
+      ),
+    inflationRate: zod.number(),
+    compoundingFrequency: zod.enum(["annual", "monthly", "quarterly"]),
+    timeframeYears: zod.number(),
+    useTargetAllocations: zod
+      .boolean()
+      .describe(
+        "When true, use targetAllocationPct instead of currentAllocationPct for buckets",
+      ),
+    goals: zod.array(
+      zod.object({
+        id: zod.string(),
+        name: zod.string(),
+        targetAmount: zod.number(),
+        targetYear: zod
+          .number()
+          .describe("Relative projection year for the goal"),
+      }),
+    ),
   }),
 });
